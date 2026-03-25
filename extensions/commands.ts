@@ -69,7 +69,7 @@ export default function (pi: ExtensionAPI) {
     description: "Set tool execution to parallel",
   });
 
-  pi.registerCommand(".system", {
+  pi.registerCommand(".get", {
     async handler(args, ctx) {
       ctx.ui.notify("Current system prompt: \n\n" + ctx.getSystemPrompt());
     },

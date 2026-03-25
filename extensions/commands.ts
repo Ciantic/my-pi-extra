@@ -109,6 +109,6 @@ export default function (pi: ExtensionAPI) {
       }
     },
     description:
-      "List active tools, or set active tools by providing comma separated tool names as argument",
+      "List active tools, or set active tools by providing tool names as argument",
   });
 }

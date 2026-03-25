@@ -1,6 +1,6 @@
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 import { getAgentSession } from "../utils/patch-get-agent-session";
-import { setupSystemPromptOverrider } from "../utils/patch-override-system-prompt";
+import { setupSystemPromptOverrider } from "../utils/override-system-prompt";
 
 export default function (pi: ExtensionAPI) {
   const systemPromptOverride = setupSystemPromptOverrider(pi);
@@ -43,11 +43,13 @@ export default function (pi: ExtensionAPI) {
 
   pi.registerCommand(".get", {
     async handler(args, ctx) {
-      const agentSession = getAgentSession();
-      ctx.ui.notify(
-        "Current system prompt: \n\n" +
-          (systemPromptOverride.get() || ctx.getSystemPrompt()),
-      );
+      if (!systemPromptOverride.effective()) {
+        ctx.ui.notify(
+          "Session has not started, system prompt can't be retrieved yet",
+        );
+        return;
+      }
+      ctx.ui.notify("Current system prompt: \n\n" + ctx.getSystemPrompt());
     },
     description: "Get system prompt",
   });
@@ -110,5 +112,23 @@ export default function (pi: ExtensionAPI) {
     },
     description:
       "List active tools, or set active tools by providing tool names as argument",
+  });
+
+  pi.registerCommand(".eval", {
+    async handler(args, ctx) {
+      const resultOfEval = eval(args);
+      ctx.ui.notify(
+        "Eval result: \n" +
+          JSON.stringify(
+            {
+              sessionStorage,
+              resultOfEval,
+            },
+            null,
+            2,
+          ),
+      );
+    },
+    description: "Evaluate JavaScript",
   });
 }

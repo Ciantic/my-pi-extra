@@ -71,7 +71,10 @@ export default function (pi: ExtensionAPI) {
 
   pi.registerCommand(".get", {
     async handler(args, ctx) {
-      ctx.ui.notify("Current system prompt: \n\n" + ctx.getSystemPrompt());
+      ctx.ui.notify(
+        "Current system prompt: \n\n" +
+          (systemPromptOverride || ctx.getSystemPrompt()),
+      );
     },
     description: "Get system prompt",
   });

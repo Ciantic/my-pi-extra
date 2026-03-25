@@ -1,7 +1,7 @@
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 import { getAgentSession } from "./patch-get-agent-session";
 
-export function getSystemPromptOverride(pi: ExtensionAPI) {
+export function setupSystemPromptOverrider(pi: ExtensionAPI) {
   let systemPromptOverride = "";
   pi.on("before_agent_start", (e, ctx) => {
     let agentSession = getAgentSession();

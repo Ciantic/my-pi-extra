@@ -1,9 +1,9 @@
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 import { getAgentSession } from "../utils/patch-get-agent-session";
-import { getSystemPromptOverride } from "../utils/patch-override-system-prompt";
+import { setupSystemPromptOverrider } from "../utils/patch-override-system-prompt";
 
 export default function (pi: ExtensionAPI) {
-  const systemPromptOverride = getSystemPromptOverride(pi);
+  const systemPromptOverride = setupSystemPromptOverrider(pi);
 
   pi.registerCommand(".export", {
     async handler(args, ctx) {

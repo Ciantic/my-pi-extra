@@ -54,6 +54,19 @@ export default function (pi: ExtensionAPI) {
     description: "Get system prompt",
   });
 
+  pi.registerCommand(".state", {
+    async handler(args, ctx) {
+      const agentSession = getAgentSession();
+
+      ctx.ui.notify(
+        "Current agent state: \n\n" +
+          // @ts-ignore
+          JSON.stringify(agentSession.agent._state, null, 2),
+      );
+    },
+    description: "Get agent state",
+  });
+
   pi.registerCommand(".set", {
     async handler(args, ctx) {
       const agentSession = getAgentSession();

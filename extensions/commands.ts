@@ -21,6 +21,7 @@ export default function (pi: ExtensionAPI) {
       try {
         await agentSession.exportToHtml(`${HOME}/pichats/${input}.html`);
         agentSession.exportToJsonl(`${HOME}/pichats/${input}.jsonl`);
+        ctx.ui.notify(`Exported to ${HOME}/pichats/${input}.html and .jsonl`);
       } catch (error) {
         ctx.ui.notify(
           `Export failed, maybe session has not started? ${JSON.stringify(error, null, 2)}`,

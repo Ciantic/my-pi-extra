@@ -26,7 +26,7 @@ export default function (pi: ExtensionAPI) {
     // Notice: way the pi-coding-agent uses `setSystemPrompt` it is not possible
     // to simply call `agentSession.agent.setSystemPrompt`, the rebuildSystemPrompt
     // mechanism overrides it. See
-    // https://github.com/badlogic/pi-mono/blob/main/packages/coding-agent/src/core/agent-session.ts#L2039
+    // https://github.com/badlogic/pi-mono/blob/21950c5ba434fcbd2f29f1264b329da0b130082d/packages/coding-agent/src/core/agent-session.ts#L2039
     let oldSetSystemPrompt = agentSession.agent.setSystemPrompt;
     agentSession.agent.setSystemPrompt = function (newPrompt: string) {
       if (systemPromptOverride) {

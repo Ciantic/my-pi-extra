@@ -29,9 +29,6 @@ export default function (pi: ExtensionAPI) {
     // https://github.com/badlogic/pi-mono/blob/21950c5ba434fcbd2f29f1264b329da0b130082d/packages/coding-agent/src/core/agent-session.ts#L2039
     let oldSetSystemPrompt = agentSession.agent.setSystemPrompt;
     agentSession.agent.setSystemPrompt = function (newPrompt: string) {
-      if (systemPromptOverride) {
-        ctx.ui.notify("Overriding system prompt with: " + systemPromptOverride);
-      }
       oldSetSystemPrompt.call(this, systemPromptOverride || newPrompt);
     };
   });
@@ -97,6 +94,13 @@ export default function (pi: ExtensionAPI) {
       } else {
         systemPromptOverride = newPrompt;
         ctx.ui.notify("System prompt override updated");
+        if (agentSession.getActiveToolNames().length > 0) {
+          ctx.ui.custom;
+          ctx.ui.notify(
+            "Note: System prompt override may not work as expected with active tools, consider using .no-tools command",
+            "warning",
+          );
+        }
       }
     },
     description: "Set system prompt",

@@ -21,6 +21,21 @@ AgentSession.prototype._installAgentToolHooks = function () {
 };
 
 export default function (pi: ExtensionAPI) {
+  let systemPromptOverride = "";
+  pi.on("before_agent_start", (e, ctx) => {
+    // Notice: way the pi-coding-agent uses `setSystemPrompt` it is not possible
+    // to simply call `agentSession.agent.setSystemPrompt`, the rebuildSystemPrompt
+    // mechanism overrides it. See
+    // https://github.com/badlogic/pi-mono/blob/main/packages/coding-agent/src/core/agent-session.ts#L2039
+    let oldSetSystemPrompt = agentSession.agent.setSystemPrompt;
+    agentSession.agent.setSystemPrompt = function (newPrompt: string) {
+      if (systemPromptOverride) {
+        ctx.ui.notify("Overriding system prompt with: " + systemPromptOverride);
+      }
+      oldSetSystemPrompt.call(this, systemPromptOverride || newPrompt);
+    };
+  });
+
   pi.registerCommand(".export", {
     async handler(args, ctx) {
       const input = await ctx.ui.input("Enter file path to export:");
@@ -52,5 +67,42 @@ export default function (pi: ExtensionAPI) {
       ctx.ui.notify("Tool execution set to parallel");
     },
     description: "Set tool execution to parallel",
+  });
+
+  pi.registerCommand(".system", {
+    async handler(args, ctx) {
+      ctx.ui.notify("Current system prompt: \n\n" + ctx.getSystemPrompt());
+    },
+    description: "Get system prompt",
+  });
+
+  pi.registerCommand(".set", {
+    async handler(args, ctx) {
+      const newPrompt =
+        args.length === 0
+          ? await ctx.ui.input(
+              "Enter new system prompt",
+              "Write a system prompt",
+              {},
+            )
+          : args;
+
+      if (!newPrompt) {
+        ctx.ui.notify("System prompt reset to default");
+        systemPromptOverride = "";
+        return;
+      } else {
+        systemPromptOverride = newPrompt;
+        ctx.ui.notify("System prompt override updated");
+      }
+    },
+    description: "Set system prompt",
+  });
+
+  pi.registerCommand(".no-tools", {
+    async handler(args, ctx) {
+      agentSession.setActiveToolsByName([]);
+    },
+    description: "Set tools to none",
   });
 }

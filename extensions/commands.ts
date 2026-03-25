@@ -103,7 +103,7 @@ export default function (pi: ExtensionAPI) {
       }
 
       if (args.length > 0) {
-        const newTools = args.split(",").map((t) => t.trim());
+        const newTools = args.split(/[, ]+/).map((t) => t.trim());
         agentSession.setActiveToolsByName(newTools);
         ctx.ui.notify("Active tools updated to: " + newTools.join(", "));
       }

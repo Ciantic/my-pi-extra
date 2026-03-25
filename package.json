@@ -1,0 +1,28 @@
+{
+  "name": "my-pi-extra",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.22.0",
+  "dependencies": {
+    "@mariozechner/pi-agent-core": "^0.62.0",
+    "@mariozechner/pi-ai": "^0.62.0",
+    "@mariozechner/pi-coding-agent": "^0.62.0",
+    "@sinclair/typebox": "^0.34.48"
+  },
+  "pnpm": {
+    "overrides": {
+      "@aws-sdk/client-bedrock-runtime": "npm:null-package@1.0.0"
+    }
+  },
+  "devDependencies": {
+    "prettier": "^3.8.1"
+  }
+}

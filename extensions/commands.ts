@@ -91,4 +91,24 @@ export default function (pi: ExtensionAPI) {
     },
     description: "Set tools to none",
   });
+
+  pi.registerCommand(".tools", {
+    async handler(args, ctx) {
+      const agentSession = getAgentSession();
+      const activeTools = agentSession.getActiveToolNames();
+      if (activeTools.length === 0) {
+        ctx.ui.notify("No active tools");
+      } else {
+        ctx.ui.notify("Active tools: " + activeTools.join(", "));
+      }
+
+      if (args.length > 0) {
+        const newTools = args.split(",").map((t) => t.trim());
+        agentSession.setActiveToolsByName(newTools);
+        ctx.ui.notify("Active tools updated to: " + newTools.join(", "));
+      }
+    },
+    description:
+      "List active tools, or set active tools by providing comma separated tool names as argument",
+  });
 }

@@ -5,6 +5,29 @@ import { setupSystemPromptOverrider } from "../utils/override-system-prompt";
 export default function (pi: ExtensionAPI) {
   const systemPromptOverride = setupSystemPromptOverrider(pi);
 
+  // Get the payload sent to the provider for the most recent provider request,
+  // for debugging and insight into what the agent is doing
+  let lastProviderRequest: any = {};
+  pi.on("before_provider_request", (e, ctx) => {
+    lastProviderRequest = e;
+  });
+  pi.registerCommand(".provider-request", {
+    async handler(args, ctx) {
+      if (Object.keys(lastProviderRequest).length === 0) {
+        ctx.ui.notify("No provider requests logged yet");
+        return;
+      }
+      ctx.ui.notify(
+        "Logged provider requests: \n\n" +
+          JSON.stringify(lastProviderRequest, null, 2),
+      );
+    },
+    description: "Show last provider request",
+  });
+
+  // Export the current session to HTML and JSONL in the user's home directory
+  // under pichats folder, with a filename provided as argument or prompted for
+  // input
   pi.registerCommand(".export", {
     async handler(args, ctx) {
       const agentSession = getAgentSession();
@@ -129,18 +152,9 @@ export default function (pi: ExtensionAPI) {
 
   pi.registerCommand(".eval", {
     async handler(args, ctx) {
+      const agentSession = getAgentSession();
       const resultOfEval = eval(args);
-      ctx.ui.notify(
-        "Eval result: \n" +
-          JSON.stringify(
-            {
-              sessionStorage,
-              resultOfEval,
-            },
-            null,
-            2,
-          ),
-      );
+      ctx.ui.notify("Eval result: \n" + JSON.stringify(resultOfEval, null, 2));
     },
     description: "Evaluate JavaScript",
   });

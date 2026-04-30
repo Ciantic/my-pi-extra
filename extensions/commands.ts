@@ -49,7 +49,7 @@ export default function (pi: ExtensionAPI) {
   pi.registerCommand(".sequential", {
     async handler(args, ctx) {
       const agentSession = getAgentSession();
-      agentSession.agent.setToolExecution("sequential");
+      agentSession.agent.toolExecution = "sequential";
       ctx.ui.notify("Tool execution set to sequential");
     },
     description: "Set tool execution to sequential",
@@ -58,7 +58,7 @@ export default function (pi: ExtensionAPI) {
   pi.registerCommand(".parallel", {
     async handler(args, ctx) {
       const agentSession = getAgentSession();
-      agentSession.agent.setToolExecution("parallel");
+      agentSession.agent.toolExecution = "parallel";
       ctx.ui.notify("Tool execution set to parallel");
     },
     description: "Set tool execution to parallel",

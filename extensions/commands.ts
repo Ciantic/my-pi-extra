@@ -130,6 +130,17 @@ export default function (pi: ExtensionAPI) {
     description: "Set tools to none",
   });
 
+  pi.registerCommand(".ken", {
+    async handler(args, ctx) {
+      const agentSession = getAgentSession();
+      systemPromptOverride.set("You are Ken, a helpful assistant.");
+      agentSession.setActiveToolsByName([]);
+      ctx.ui.notify(
+        "System prompt set to 'You are Ken, a helpful assistant.' and all tools deactivated. You can now ask a question.",
+      );
+    },
+  });
+
   pi.registerCommand(".tools", {
     async handler(args, ctx) {
       const agentSession = getAgentSession();
